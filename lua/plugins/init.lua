@@ -4,7 +4,6 @@ return {
     -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
   },
-
   {
     "williamboman/mason.nvim",
     lazy = false,
@@ -12,7 +11,6 @@ return {
       ui = { border = "rounded" },
     },
   },
-
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
@@ -51,15 +49,10 @@ return {
           vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
       end,
   },
-
-  -- These are some examples, uncomment them if you want to see them work!
   {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
+    "rafamadriz/friendly-snippets",
+    lazy = false,
   },
-
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -96,9 +89,31 @@ return {
       })
     end,
   },
-
-  -- test new blink
-  -- { import = "nvchad.blink.lazyspec" },
+  -- Blink completion engine
+  {
+    "saghen/blink.cmp",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    version = "1.*",
+    -- Use pre-built binaries instead of building from source
+    lazy = false, -- Load immediately
+    config = function()
+      local blink = require("blink.cmp")
+      
+      blink.setup({
+        keymap = { preset = "default" },
+        appearance = {
+          nerd_font_variant = "mono"
+        },
+        completion = {
+          documentation = { auto_show = false }
+        },
+        sources = {
+          default = { "lsp", "path", "snippets", "buffer" },
+        },
+        fuzzy = { implementation = "prefer_rust_with_warning" }
+      })
+    end,
+  },
 
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
