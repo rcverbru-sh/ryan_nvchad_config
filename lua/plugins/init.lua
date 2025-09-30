@@ -60,6 +60,43 @@ return {
     end,
   },
 
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").setup({
+        defaults = {
+          file_ignore_patterns = {
+            "node_modules/",
+            ".git/",
+            "%.lock",
+            "%.log",
+            "%.tmp",
+            "%.cache",
+            "%.DS_Store",
+            "Thumbs.db",
+            "lazy-lock.json",
+            "%.stylua.toml",
+          },
+          find_command = { 'rg', '--files', '--hidden', '--glob', '!.git/**' },
+          -- Lock sorting strategy to ascending (top to bottom)
+          sorting_strategy = "ascending",
+          -- Ensure consistent layout
+          layout_strategy = "flex",
+          layout_config = {
+            prompt_position = "top",
+          },
+        },
+        pickers = {
+          find_files = {
+            find_command = { 'rg', '--files', '--hidden', '--glob', '!.git/**' },
+            sorting_strategy = "ascending",
+          },
+        },
+      })
+    end,
+  },
+
   -- test new blink
   -- { import = "nvchad.blink.lazyspec" },
 
