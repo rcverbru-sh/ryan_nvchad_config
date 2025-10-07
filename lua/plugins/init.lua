@@ -89,31 +89,38 @@ return {
       })
     end,
   },
+  -- Disable nvim-cmp from NvChad to prevent conflicts with blink.cmp
+  -- {
+    -- "hrsh7th/nvim-cmp",
+    -- enabled = false,
+  -- },
+
   -- Blink completion engine
-  {
-    "saghen/blink.cmp",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    version = "1.*",
-    -- Use pre-built binaries instead of building from source
-    lazy = false, -- Load immediately
-    config = function()
-      local blink = require("blink.cmp")
+--   {
+--     "saghen/blink.cmp",
+--     dependencies = { "rafamadriz/friendly-snippets" },
+--     version = "1.*",
+--     -- enabled = false,
+--     -- Use pre-built binaries instead of building from source
+--     lazy = false, -- Load immediately
+--     config = function()
+--       local blink = require("blink.cmp")
       
-      blink.setup({
-        keymap = { preset = "default" },
-        appearance = {
-          nerd_font_variant = "mono"
-        },
-        completion = {
-          documentation = { auto_show = false }
-        },
-        sources = {
-          default = { "lsp", "path", "snippets", "buffer" },
-        },
-        fuzzy = { implementation = "prefer_rust_with_warning" }
-      })
-    end,
-  },
+--       blink.setup({
+--         keymap = { preset = "default" },
+--         appearance = {
+--           nerd_font_variant = "mono"
+--         },
+--         completion = {
+--           documentation = { auto_show = false }
+--         },
+--         sources = {
+--           default = { "lsp", "path", "snippets", "buffer" },
+--         },
+--         fuzzy = { implementation = "prefer_rust_with_warning" }
+--       })
+--     end,
+--   },
 
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
