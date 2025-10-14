@@ -21,6 +21,24 @@ return {
   },
 
   {
+    'akinsho/git-conflict.nvim',
+    version = "*",
+    lazy = false, -- Load immediately
+    config = function()
+      require('git-conflict').setup({
+        default_mappings = true, -- load default mappings
+        default_commands = true, -- load default commands
+        disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
+        list_opener = 'copen', -- command or function to open the conflicts list
+        highlights = { -- They must have background color, otherwise the default color will be used
+          incoming = 'DiffAdd',
+          current = 'DiffText',
+        }
+      })
+    end,
+  },
+
+  {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
@@ -90,37 +108,62 @@ return {
     end,
   },
   -- Disable nvim-cmp from NvChad to prevent conflicts with blink.cmp
-  -- {
-    -- "hrsh7th/nvim-cmp",
-    -- enabled = false,
-  -- },
+  {
+    "hrsh7th/nvim-cmp",
+    enabled = false,
+  },
 
   -- Blink completion engine
---   {
---     "saghen/blink.cmp",
---     dependencies = { "rafamadriz/friendly-snippets" },
---     version = "1.*",
---     -- enabled = false,
---     -- Use pre-built binaries instead of building from source
---     lazy = false, -- Load immediately
---     config = function()
---       local blink = require("blink.cmp")
+  {
+    "saghen/blink.cmp",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    version = "1.*",
+    -- Use pre-built binaries instead of building from source
+    lazy = false, -- Load immediately
+    config = function()
+      local blink = require("blink.cmp")
+     
+      blink.setup({
+        keymap = { preset = "default" },
+        appearance = {
+          nerd_font_variant = "mono"
+        },
+        completion = {
+          documentation = { auto_show = false }
+        },
+        sources = {
+          default = { "lsp", "path", "snippets", "buffer" },
+        },
+        fuzzy = { implementation = "prefer_rust_with_warning" }
+      })
       
---       blink.setup({
---         keymap = { preset = "default" },
---         appearance = {
---           nerd_font_variant = "mono"
---         },
---         completion = {
---           documentation = { auto_show = false }
---         },
---         sources = {
---           default = { "lsp", "path", "snippets", "buffer" },
---         },
---         fuzzy = { implementation = "prefer_rust_with_warning" }
---       })
---     end,
---   },
+      -- Add custom keymaps after setup
+      local keymap = vim.keymap.set
+      keymap("i", "<Tab>", function()
+        if blink.is_visible() then
+          blink.select_next()
+        else
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n")
+        end
+      end, { desc = "Next completion or insert tab" })
+      
+      keymap("i", "<S-Tab>", function()
+        if blink.is_visible() then
+          blink.select_prev()
+        else
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true), "n")
+        end
+      end, { desc = "Previous completion or insert shift-tab" })
+      
+      keymap("i", "<CR>", function()
+        if blink.is_visible() then
+          blink.accept()
+        else
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n")
+        end
+      end, { desc = "Accept completion or insert newline" })
+    end,
+  },
 
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
