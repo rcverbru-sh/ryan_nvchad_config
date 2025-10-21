@@ -16,4 +16,53 @@ for _, server in ipairs(servers) do
   })
 end
 
+-- Register tsgo as a custom LSP server using the modern API
+local configs = require("lspconfig.configs")
+if not configs.tsgo then
+  configs.tsgo = {
+    default_config = {
+      cmd = { 'tsgo', '--lsp', '--stdio' },
+      filetypes = {
+        'javascript',
+        'javascriptreact',
+        'javascript.jsx',
+        'typescript',
+        'typescriptreact',
+        'typescript.tsx',
+      },
+      root_markers = {
+        'tsconfig.json',
+        'jsconfig.json',
+        'package.json',
+        '.git',
+        'tsconfig.base.json',
+      },
+      single_file_support = true,
+    },
+  }
+end
+
+-- Configure tsgo with custom settings using the modern API
+vim.lsp.config.add({
+  name = "tsgo",
+  cmd = { 'tsgo', '--lsp', '--stdio' },
+  filetypes = {
+    'javascript',
+    'javascriptreact',
+    'javascript.jsx',
+    'typescript',
+    'typescriptreact',
+    'typescript.tsx',
+  },
+  root_markers = {
+    'tsconfig.json',
+    'jsconfig.json',
+    'package.json',
+    '.git',
+    'tsconfig.base.json',
+  },
+  capabilities = capabilities,
+  single_file_support = true,
+})
+
 -- read :h vim.lsp.config for changing options of lsp servers 
