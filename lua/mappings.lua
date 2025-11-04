@@ -22,4 +22,16 @@ map("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Find recent file
 -- map("c", "b", { desc = "Git Conflict Choose Both" })
 -- map("c", "0", { desc = "Git Conflict Choose None" })
 
+-- Live Preview keymaps
+map("n", "<leader>lp", "<cmd>LivePreview start<cr>", { desc = "Live Preview Start" })
+map("n", "<leader>lpp", "<cmd>LivePreview pick<cr>", { desc = "Live Preview Pick" })
+map("n", "<leader>lpc", "<cmd>LivePreview close<cr>", { desc = "Live Preview Close" })
+
+-- Outline keymap
+map("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
+
+-- Symbols keymaps
+map("n", "<leader>s", "<cmd>Symbols<CR>", { desc = "Toggle Symbols" })
+map("n", "<leader>S", "<cmd>SymbolsClose<CR>", { desc = "Close Symbols" })
+
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
