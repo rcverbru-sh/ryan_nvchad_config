@@ -39,6 +39,7 @@ return {
       end, { desc = "Install all Mason LSPs and tools" })
     end,
   },
+
   {
       "toppair/peek.nvim",
       event = { "VeryLazy" },
@@ -49,10 +50,12 @@ return {
           vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
       end,
   },
+
   {
     "rafamadriz/friendly-snippets",
     lazy = false,
   },
+
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -89,6 +92,7 @@ return {
       })
     end,
   },
+
   -- Blink completion engine
   {
     "saghen/blink.cmp",
@@ -156,23 +160,31 @@ return {
   {
     "hedyhli/outline.nvim",
     lazy = false,
+    dependencies = {
+      -- Treesitter provider for TypeScript/TSX when LSP doesn't support documentSymbol
+      "epheien/outline-treesitter-provider.nvim",
+    },
     config = function()
-      require("outline").setup()
-      -- Add keymap to toggle outline
+      -- Ensure TypeScript/TSX parsers are installed (NvChad includes treesitter but may not have these parsers)
       vim.schedule(function()
-        vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
+        local parsers = { "typescript", "tsx", "javascript", "jsx" }
+        for _, parser in ipairs(parsers) do
+          pcall(vim.cmd, "TSInstall " .. parser)
+        end
       end)
+      
+      require("outline").setup({
+        -- Configure providers - prioritize treesitter for TypeScript/TSX since tsgo doesn't support documentSymbol
+        providers = {
+          -- Try treesitter first, then LSP as fallback
+          priority = { 'treesitter', 'lsp', 'coc', 'markdown', 'norg', 'man' },
+          lsp = {
+            -- Don't blacklist tsgo, but treesitter will be used first
+            blacklist_clients = {},
+          },
+        },
+      })
     end,
   },
-
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
 }
 
